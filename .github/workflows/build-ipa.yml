@@ -7,11 +7,21 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
       - name: Repository auschecken
         uses: actions/checkout@v4
+
+      - name: Installierte Xcode-Versionen anzeigen
+        run: ls /Applications | grep Xcode
+
+      - name: Neueste installierte Xcode-Version auswählen
+        run: |
+          LATEST_XCODE=$(ls -d /Applications/Xcode_*.app 2>/dev/null | sort -V | tail -n 1)
+          echo "Wähle: $LATEST_XCODE"
+          sudo xcode-select -s "$LATEST_XCODE/Contents/Developer"
+          xcodebuild -version
 
       - name: XcodeGen installieren
         run: brew install xcodegen
